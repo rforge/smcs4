@@ -3,6 +3,9 @@
 \docType{class}
 
 \alias{ParticleMatrix-class}
+\alias{ParticleCov}
+\alias{ParticleMean}
+\alias{ParticleVar} 
 
 \alias{getParticles,ParticleMatrix-method}
 \alias{setParticles,ParticleMatrix-method}
@@ -16,6 +19,12 @@
 \alias{getLogWeights,ParticleMatrix-method}
 \alias{getWeights,ParticleMatrix-method}
 \alias{getNormWeights,ParticleMatrix-method}
+\alias{ParticleMean,ParticleMatrix-method}
+\alias{ParticleCov,ParticleMatrix-method}
+\alias{ParticleVar,ParticleMatrix-method}
+\alias{Resample,ParticleMatrix-method}
+\alias{doResample,ParticleMatrix-method}
+
 
 \title{Class "ParticleMatrix"}
 
@@ -23,10 +32,18 @@
 
 \section{Slots}{
 
+  Code: N lW_update logLik logWeights mcmc_move p_margin p_move
+        particles resampleC unifWeights
+  Inherited: particles logWeights unifWeights p_move mcmc_move
+        lW_update logLik resampleC N
+  Docs: Particles code{p_margin}: lW_update logWeights mcmc_move p_move
+        resampleC unifWeights
+
+
 	\describe{
-    \item{\code{Particles}:}{Matrix with particle values}
+    \item{\code{particles}:}{Matrix with particle values}
     
-    \item{code{p_margin}:}{Integer indicating which margin in the matrix represents particle ids}
+    \item{\code{p_margin}:}{Integer indicating which margin in the matrix represents particle ids}
 
 	\item{\code{logWeights}:}{Vector containing the log (unnormalised) particle weights.}
 

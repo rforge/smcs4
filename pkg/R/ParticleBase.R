@@ -1,5 +1,6 @@
 setClass("ParticleBase",
 	representation(
+	    particles = "ANY",
 		logWeights = "vector", # log of particle weights
 		unifWeights = "logical", # are current weights uniform?
 		p_move = "function",
@@ -9,6 +10,21 @@ setClass("ParticleBase",
 		resampleC = "numeric",
 		N = "integer"
 	)
+)
+
+setMethod("particles",signature(object="ParticleBase"),
+    function(object,...) {
+        return(object@particles)
+    }
+)
+
+setReplaceMethod(
+    f = "particles",
+    signature = "ParticleBase",
+    definition = function(object,value) {
+        object@particles <- value
+        return(object)
+    }
 )
 
 
@@ -126,6 +142,25 @@ setMethod("ESS",signature(object="ParticleBase"),
 	}
 )
 
+setMethod("logWeights",signature(object="ParticleBase"),
+  function(object,...) {
+    return(object@logWeights) 
+  }
+)
+
+setReplaceMethod(
+    f = "logWeights",
+    signature = "ParticleBase",
+    definition = function(object,value) {
+        # normalize to sensible values
+		max <- max(-.Machine$double.xmax,value)
+		object@logWeights <- value - max
+		if(length(unique((value))) == 1) object@unifWeights <- TRUE
+        return(object)
+    }
+)
+
+
 setMethod("getLogWeights",signature(object="ParticleBase"),
   function(object,...) {
     return(object@logWeights) 
@@ -143,7 +178,7 @@ setReplaceMethod(
 
 setMethod("getWeights",signature(object="ParticleBase"),
   function(object,...) {
-    if(!object@unifWeights) return(exp(getLogWeights(object,...))) else return(rep(1,object@N))
+    if(!object@unifWeights) return(exp(logWeights(object,...))) else return(rep(1,object@N))
   }
 )
 
