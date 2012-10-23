@@ -38,7 +38,7 @@ DynProbit <- function(formula,mu0,Sigma0,Q,N = 2000,data,resampleC = .5,output=c
         mf <- model.frame(formula)
     }
     y <- model.response(mf)
-    x <- as.matrix(model.frame(mf))
+    x <- as.matrix(model.matrix(terms(mf),mf))
     if(is.factor(y)) {
         y <- as.numeric(y != levels(y)[1])
     } else {
@@ -55,7 +55,7 @@ DynProbit <- function(formula,mu0,Sigma0,Q,N = 2000,data,resampleC = .5,output=c
     T <- length(y)
     
     if(output == "smoothing") {
-        particles <- array(NA,dim=c(T,N))
+        particles <- array(NA,dim=c(T,nx,N))
     } else {
         pmean <- matrix(NA,nrow=T,ncol=nx)
     }
@@ -63,13 +63,13 @@ DynProbit <- function(formula,mu0,Sigma0,Q,N = 2000,data,resampleC = .5,output=c
         pf <- ParticleMove(pf,x=x[t,],y=y[t])
         pf <- UpdateWeights(pf,x=x[t,],y=y[t])
         if(output == "smoothing") {
-            particles[t+1,] <- particles(pf)
+            particles[t,,] <- particles(pf)
         }
         if(output == "mean") pmean[t,] <- mean(pf)
         if(pf@resampleC == 1 || ESS(pf) < resampleC*pf@N) {
             if(output == "smoothing") {
                 idx <- .Call("resample_systematic",logWeights=logWeights(pf),PACKAGE="SMCS4")
-                particles <- particles[,idx]
+                particles <- particles[,,idx]
                 particles(pf) <- particles(pf)[,idx]
             } else {
                 pf <- Resample(pf)
@@ -78,7 +78,7 @@ DynProbit <- function(formula,mu0,Sigma0,Q,N = 2000,data,resampleC = .5,output=c
     }
     if(output == "mean") return(pmean)
     if(output == "filter") return(pf)
-    if(output == "smoother") return(list(particles=particles,weights=getNormWeights(pf)))
+    if(output == "smoothing") return(list(particles=particles,weights=getNormWeights(pf)))
 }
 
 setMethod("ParticleMove",signature(object="DynProbit"),
@@ -88,7 +88,7 @@ setMethod("ParticleMove",signature(object="DynProbit"),
         object@S <- as.numeric(t(x)%*%object@Ptt%*%x + 1)
         object@yp <- as.vector(t(x)%*%object@particles)
         # sample ypart
-        if(y==0) ypart <- rtnorm(getN(object),mean=object@yp,sd=sqrt(object@S),lower=0,upper=Inf) else ypart <- rtnorm(getN(object),mean=object@yp,sd=sqrt(object@S),lower=-Inf,upper=0)
+        if(y==0) ypart <- rtnorm(getN(object),mean=object@yp,sd=sqrt(object@S),lower=-Inf,upper=0) else ypart <- rtnorm(getN(object),mean=object@yp,sd=sqrt(object@S),lower=0,upper=Inf)
         object@particles <- object@particles + object@Ptt%*%x%*%(1/object@S)%*%(ypart-object@yp)
         object@Ptt <- (diag(object@nx)-(object@Ptt%*%x%*%(1/object@S))%*%t(x))%*%object@Ptt
 		object
@@ -107,7 +107,7 @@ setMethod("SmcIterate",signature(object="DynProbit"),
 
 setMethod("UpdateWeights",signature(object="DynProbit"),
     function(object,x,y,...) {
-        weights <- getLogWeights(object) + pnorm(-object@yp/sqrt(object@S),lower.tail=as.logical(y[1]),log.p=TRUE)
+        weights <- getLogWeights(object) + pnorm(-object@yp/sqrt(object@S),lower.tail=!as.logical(y[1]),log.p=TRUE)
         #weights <- pnorm(-object@yp/sqrt(object@S),lower.tail=as.logical(y[1]),log.p=TRUE) 
         logWeights(object) <- weights
         object@unifWeights <- FALSE

@@ -28,24 +28,24 @@ smc_resample_residual <- function(logWeights,...) {
 setMethod("Resample",signature(object="ParticleMatrix"),
 	function(object,type=c("systematic","residual","multinomial","stratified"),...) {
 		type <- match.arg(type)
-		logWeights <- getLogWeights(object,...)
+		logW <- logWeights(object,...)
 		N <- object@N
 		switch(type,
 			systematic = {
-				ids <- .Call("resample_systematic",logWeights = logWeights,PACKAGE="SMCS4")
+				ids <- .Call("resample_systematic",logWeights = logW,PACKAGE="SMCS4")
 			},
 			residual = {
-				ids <- smc_resample_residual(logWeights,...)
+				ids <- smc_resample_residual(logW,...)
 			},
 			multinomial = {
-				ids <- smc_resample_multinomial(logWeights,...)
+				ids <- smc_resample_multinomial(logW,...)
 			},
 			stratified = {
-				ids <- .Call("resample_stratified",logWeights = logWeights,PACKAGE="SMCS4")
+				ids <- .Call("resample_stratified",logWeights = logW,PACKAGE="SMCS4")
 			}
 		)
 		if(object@p_margin == 2) object@particles <- object@particles[,ids] else object@particles <- object@particles[ids,]
-		object@logWeights <- rep(log(1/N),N)
+		logWeights(object) <- rep(log(1/N),N)
 		object@unifWeights <- TRUE
 		object
 	}
@@ -55,20 +55,20 @@ setMethod("doResample",signature(object="ParticleMatrix"),
 	function(object,type=c("systematic","residual","multinomial","stratified"),...) {
         name <- deparse(substitute(object))
 		type <- match.arg(type)
-		weights <- getWeights(object,...)
+		logW <- logWeights(object,...)
 		N <- object@N
 				switch(type,
 			systematic = {
-				ids <- .Call("smc_resample_systematic",logWeights = logWeights)
+				ids <- .Call("smc_resample_systematic",logWeights = logW)
 			},
 			residual = {
-				ids <- smc_resample_residual(logWeights,...)
+				ids <- smc_resample_residual(logW,...)
 			},
 			multinomial = {
-				ids <- smc_resample_multinomial(logWeights,...)
+				ids <- smc_resample_multinomial(logW,...)
 			},
 			stratified = {
-				ids <- .Call("smc_resample_stratified",logWeights = logWeights)
+				ids <- .Call("smc_resample_stratified",logWeights = logW)
 			}
 		)
 		if(object@p_margin == 2) object@particles <- object@particles[,ids] else object@particles <- object@particles[ids,]
