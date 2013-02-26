@@ -107,7 +107,7 @@ setMethod("SmcIterate",signature(object="DynProbit"),
 
 setMethod("UpdateWeights",signature(object="DynProbit"),
     function(object,x,y,...) {
-        weights <- getLogWeights(object) + pnorm(-object@yp/sqrt(object@S),lower.tail=!as.logical(y[1]),log.p=TRUE)
+        weights <- logWeights(object) + pnorm(-object@yp/sqrt(object@S),lower.tail=!as.logical(y[1]),log.p=TRUE)
         #weights <- pnorm(-object@yp/sqrt(object@S),lower.tail=as.logical(y[1]),log.p=TRUE) 
         logWeights(object) <- weights
         object@unifWeights <- FALSE

@@ -9,7 +9,6 @@ exportClasses(
 exportMethods(
 	particles,
 	"particles<-",
-	"setParticles<-",
 	ParticleMove,
 	#doParticleMove,
 	SmcIterate,
@@ -17,7 +16,7 @@ exportMethods(
 	UpdateWeights,
 	#doUpdateWeights,
 	McmcMove,
-	doMcmcMove,
+	#doMcmcMove,
 	ESS,
 	logWeights,
 	"logWeights<-",

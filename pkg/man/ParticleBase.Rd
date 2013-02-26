@@ -10,41 +10,28 @@
 \alias{Resample}
 \alias{SmcIterate}
 \alias{UpdateWeights}
-\alias{doMcmcMove}
-\alias{doParticleMove}
-\alias{doResample}
-\alias{doSmcIterate}
-\alias{doUpdateWeights}
-\alias{getLogWeights}
+\alias{logWeights}
 \alias{getN}
 \alias{getNormWeights}
-\alias{getParticles}
+\alias{particles}
 \alias{getWeights}
-\alias{setLogWeights<-}
-\alias{setParticles<-}
+\alias{logWeights<-}
+\alias{particles<-}
 
 \alias{particles,ParticleBase-method}
 \alias{particles<-,ParticleBase-method}
-\alias{getParticles,ParticleBase-method}
-\alias{setParticles,ParticleBase-method}
 \alias{ParticleMove,ParticleBase-method}
-\alias{doParticleMove,ParticleBase-method}
 \alias{SmcIterate,ParticleBase-method}
-\alias{doSmcIterate,ParticleBase-method}
 \alias{UpdateWeights,ParticleBase-method}
-\alias{doUpdateWeights,ParticleBase-method}
 \alias{ESS}
 \alias{ESS,ParticleBase-method}
-\alias{getLogWeights,ParticleBase-method}
-\alias{setLogWeights<-,ParticleBase-method}
+\alias{logWeights,ParticleBase-method}
+\alias{logWeights<-,ParticleBase-method}
 \alias{getWeights,ParticleBase-method}
 \alias{getNormWeights,ParticleBase-method}
 
 \alias{McmcMove,ParticleBase-method}
-\alias{doMcmcMove,ParticleBase-method}
 \alias{getN,ParticleBase-method}
-\alias{setLogWeights,ParticleBase-method}
-\alias{setParticles<-,ParticleBase-method} 
 
 \title{Class "ParticleBase"}
 
@@ -53,7 +40,7 @@
 \section{Slots}{
 
 	\describe{
-        particles = "ANY",
+    particles = "ANY",
 		logWeights = "vector", # log of particle weights
 		unifWeights = "logical", # are current weights uniform?
 		p_move = "function",

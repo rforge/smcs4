@@ -1,5 +1,5 @@
 Package: SMCS4
-Version: 0.3
+Version: 0.4
 Date: 2012-10-01
 Title: Sequential Monte Carlo samplers in S4
 Author: Maarten Speekenbrink <m.speekenbrink@ucl.ac.uk>

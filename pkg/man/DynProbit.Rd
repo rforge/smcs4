@@ -4,16 +4,11 @@
 \alias{DynProbitInit}
 
 \alias{particles,DynProbit-method}
-\alias{getParticles,DynProbit-method}
-\alias{setParticles,DynProbit-method}
 \alias{ParticleMove,DynProbit-method}
-\alias{doParticleMove,DynProbit-method}
 \alias{SmcIterate,DynProbit-method}
-\alias{doSmcIterate,DynProbit-method}
 \alias{UpdateWeights,DynProbit-method}
-\alias{doUpdateWeights,DynProbit-method}
 \alias{ESS,DynProbit-method}
-\alias{getLogWeights,DynProbit-method}
+\alias{logWeights,DynProbit-method}
 \alias{getWeights,DynProbit-method}
 \alias{getNormWeights,DynProbit-method}
 
@@ -79,7 +74,7 @@
     
     means <- DynProbit(y~x[,1] + x[,2],mu0=c(0,0,0),Sigma0=.2*diag(3),Q=.01*diag(3),N=2000)
     
-    \notrun{
+    \dontrun{
     layout(matrix(1:3,ncol=3))
     plot(c(1,100),c(min(c(means[,1],theta[,1])),max(c(means[,1],theta[,1]))),type="n")
     lines(1:100,theta[,1],lty=2)

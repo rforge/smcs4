@@ -7,23 +7,23 @@
 \alias{ParticleMean}
 \alias{ParticleVar} 
 
-\alias{getParticles,ParticleMatrix-method}
-\alias{setParticles,ParticleMatrix-method}
+\alias{particles,ParticleMatrix-method}
+\alias{particles<-,ParticleMatrix-method}
 \alias{ParticleMove,ParticleMatrix-method}
-\alias{doParticleMove,ParticleMatrix-method}
 \alias{SmcIterate,ParticleMatrix-method}
-\alias{doSmcIterate,ParticleMatrix-method}
 \alias{UpdateWeights,ParticleMatrix-method}
-\alias{doUpdateWeights,ParticleMatrix-method}
 \alias{ESS,ParticleMatrix-method}
-\alias{getLogWeights,ParticleMatrix-method}
+\alias{logWeights,ParticleMatrix-method}
+\alias{logWeights<-,ParticleMatrix-method}
 \alias{getWeights,ParticleMatrix-method}
 \alias{getNormWeights,ParticleMatrix-method}
 \alias{ParticleMean,ParticleMatrix-method}
 \alias{ParticleCov,ParticleMatrix-method}
 \alias{ParticleVar,ParticleMatrix-method}
+\alias{mean,ParticleMatrix-method}
+\alias{cov,ParticleMatrix-method}
+\alias{var,ParticleMatrix-method}
 \alias{Resample,ParticleMatrix-method}
-\alias{doResample,ParticleMatrix-method}
 
 
 \title{Class "ParticleMatrix"}
@@ -62,20 +62,23 @@
 
 \section{Methods}{
 \describe{
-    \item{getParticles}{\code{signature(object = "ParticleMatrix")}: return particles}
-    \item{setParticles}{\code{signature(object = "ParticleMatrix")}: set particles}
+    \item{particles}{\code{signature(object = "ParticleMatrix")}: return particles}
+    \item{particles<-}{\code{signature(object = "ParticleMatrix")}: set particles}
     \item{ParticleMove}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{doParticleMove}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{SmcIterate}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{doSmcIterate}{\code{signature(object = "ParticleMatrix")}: move particles}
+    #\item{doParticleMove}{\code{signature(object = "ParticleMatrix")}: move particles}
+    \item{SmcIterate}{\code{signature(object = "ParticleMatrix")}: do a full SMC iteration}
+    #\item{doSmcIterate}{\code{signature(object = "ParticleMatrix")}: move particles}
     
-    \item{UpdateWeights}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{doUpdateWeights}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{ESS}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{getLogWeights}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{setLogWeights}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{getWeights}{\code{signature(object = "ParticleMatrix")}: move particles}
-    \item{getNormWeights}{\code{signature(object = "ParticleMatrix")}: move particles}
+    \item{UpdateWeights}{\code{signature(object = "ParticleMatrix")}: calculate updated weights}
+    #\item{doUpdateWeights}{\code{signature(object = "ParticleMatrix")}: move particles}
+    \item{ESS}{\code{signature(object = "ParticleMatrix")}: effective sample size}
+    \item{logWeights}{\code{signature(object = "ParticleMatrix")}: return log weights}
+    \item{logWeights<-}{\code{signature(object = "ParticleMatrix")}: set log weights}
+    \item{getWeights}{\code{signature(object = "ParticleMatrix")}: return the unnormalized weights}
+    \item{getNormWeights}{\code{signature(object = "ParticleMatrix")}: return the self-normalized weights}
+    \item{mean}{\code{signature(object = "ParticleMatrix")}: return the estimated mean of each particle dimension}
+    \item{var}{\code{signature(object = "ParticleMatrix")}: return the estimated variance of each particle dimension}
+    \item{cov}{\code{signature(object = "ParticleMatrix")}: return the estimated covariance matrix of the particle dimensions}
 
   }
 

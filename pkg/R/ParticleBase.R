@@ -28,55 +28,19 @@ setReplaceMethod(
 )
 
 
-setMethod("getParticles",signature(object="ParticleBase"),
-    function(object,...) {
-        return(object@particles)
-    }
-)
-
-setReplaceMethod(
-    f = "setParticles",
-    signature = "ParticleBase",
-    definition = function(object,value) {
-        object@particles <- value
-        return(object)
-    }
-)
-
 setMethod("ParticleMove",signature(object="ParticleBase"),
 	function(object,...) {
-		object@particles <- object@p_move(getParticles(object,...),...)
+		object@particles <- object@p_move(particles(object,...),...)
 		object
-	}
-)
-
-setMethod("doParticleMove",signature(object="ParticleBase"),
-	function(object,...) {
-        name <- deparse(substitute(object))
-        name <- paste(name,"@particles",sep="")
-		#setParticles(object,...) <- object@p_move(object,...)
-		assign(name,object@p_move(getParticles(object,...),...),envir=parent.frame())
-        return(invisible())
 	}
 )
 
 setMethod("McmcMove",signature(object="ParticleBase"),
 	function(object,...) {
-		object@particles <- object@mcmc_move(getParticles(object,...),...)
+		object@particles <- object@mcmc_move(particles(object,...),...)
 		object
 	}
 )
-
-setMethod("doMcmcMove",signature(object="ParticleBase"),
-	function(object,...) {
-        name <- deparse(substitute(object))
-        name <- paste(name,"@particles",sep="")
-		#setParticles(object,...) <- object@p_move(object,...)
-		assign(name,object@mcmc_move(getParticles(object,...),...),envir=parent.frame())
-        return(invisible())
-	}
-)
-
 
 setMethod("SmcIterate",signature(object="ParticleBase"),
 	function(object,...) {
@@ -88,21 +52,9 @@ setMethod("SmcIterate",signature(object="ParticleBase"),
 	}
 )
 
-setMethod("doSmcIterate",signature(object="ParticleBase"),
-	function(object,...) {
-        name <- deparse(substitute(object))
-		doParticleMove(object,...)
-        doUpdateWeights(object,...)
-        ess <- ESS(object,...)
-		if(ess < (object@resampleC*object@N)) doResample(object,...)
-		assign(name,object,envir=parent.frame())
-        return(invisible())
-	}
-)
-
 setMethod("UpdateWeights",signature(object="ParticleBase"),
 	function(object,data,...) {
-		logWeights <- object@lW_update(getParticles(object,...),getLogWeights(object,...),...)
+		logWeights <- object@lW_update(getParticles(object,...),logWeights(object,...),...)
 		# normalize to sensible values
 		max <- max(-.Machine$double.xmax,logWeights)
 		object@logWeights <- logWeights - max
@@ -118,26 +70,12 @@ setMethod("UpdateWeights",signature(object="ParticleBase"),
 	}
 )
 
-setMethod("doUpdateWeights",signature(object="ParticleBase"),
-	function(object,data,...) {
-        name <- deparse(substitute(object))
-        name <- paste(name,"@logWeights",sep="")
-		logWeights <- object@lW_update(getParticles(object,...),getLogWeights(object,...),...)
-		# normalize to sensible values
-		max <- max(-.Machine$double.xmax,logWeights)
-        logWeights <- logWeights - max
-        assign(paste(name,"@logWeights",sep=""),logWeights,envir=parent.frame())
-		#object@unifWeights <- FALSE
-		assign(paste(name,"@unifWeights",sep=""),FALSE,envir=parent.frame())
-        return(invisible())
-	}
-)
 
 setMethod("ESS",signature(object="ParticleBase"),
 	function(object,...) {
 		#w <- exp(object@logWeights)
 		sumw <- sum(getWeights(object,...))
-		sumsq <- sum(exp(2*getLogWeights(object,...)))
+		sumsq <- sum(exp(2*logWeights(object,...)))
 		exp(-log(sumsq) + 2*log(sumw))
 	}
 )
@@ -161,20 +99,7 @@ setReplaceMethod(
 )
 
 
-setMethod("getLogWeights",signature(object="ParticleBase"),
-  function(object,...) {
-    return(object@logWeights) 
-  }
-)
 
-setReplaceMethod(
-    f = "setLogWeights",
-    signature = "ParticleBase",
-    definition = function(object,value) {
-        object@logWeights <- value
-        return(object)
-    }
-)
 
 setMethod("getWeights",signature(object="ParticleBase"),
   function(object,...) {
@@ -202,7 +127,7 @@ setMethod("getN",signature(object="ParticleBase"),
 
 setMethod("logLik",signature(object="ParticleBase"),
     function(object,...) {
-        return(object@logLik(getParticles(object,...),...))
+        return(object@logLik(particles(object,...),...))
     }
 )
 
