@@ -52,7 +52,7 @@
     
     If \code{output = means}, a matrix with the posterior means at each time point is returned.
     
-    If \code{output = filter}, an particle filter object of class \code{DynProbit} is returned. The filter is in the state at t=T.
+    If \code{output = filter}, a list is returned with the particle values and their corresponding weights for each time-point t.
     
     If \code{output = smoother}, a list is returned with the particle paths of the N particles and the weights at t=T. Note that this
     is a naive implementation of a particle smoother, and the results are not expected to be good for initial time points. This

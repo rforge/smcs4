@@ -54,30 +54,36 @@ DynProbit <- function(formula,mu0,Sigma0,Q,N = 2000,data,resampleC = .5,output=c
     
     T <- length(y)
     
-    if(output == "smoothing") {
+    if(output == "smoothing" || output == "filter") {
         particles <- array(NA,dim=c(T,nx,N))
     } else {
         pmean <- matrix(NA,nrow=T,ncol=nx)
     }
+    if(output == "filter") fweights <- matrix(NA,nrow=T,ncol=N)
+    
     for(t in 1:T) {
         pf <- ParticleMove(pf,x=x[t,],y=y[t])
         pf <- UpdateWeights(pf,x=x[t,],y=y[t])
-        if(output == "smoothing") {
+        if(output == "smoothing" || output == "filter") {
             particles[t,,] <- particles(pf)
         }
+        if(output == "filter") fweights[t,] <- getNormWeights(pf)
         if(output == "mean") pmean[t,] <- mean(pf)
         if(pf@resampleC == 1 || ESS(pf) < resampleC*pf@N) {
             if(output == "smoothing") {
                 idx <- .Call("resample_systematic",logWeights=logWeights(pf),PACKAGE="SMCS4")
                 particles <- particles[,,idx]
                 particles(pf) <- particles(pf)[,idx]
+                # set weights
+                logWeights(pf) <- rep(log(1/N),N)
+                pf@unifWeights <- TRUE
             } else {
                 pf <- Resample(pf)
             }
         }
     }
     if(output == "mean") return(pmean)
-    if(output == "filter") return(pf)
+    if(output == "filter") return(list(particles=particles,weights=fweights))
     if(output == "smoothing") return(list(particles=particles,weights=getNormWeights(pf)))
 }
 
