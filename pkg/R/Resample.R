@@ -44,7 +44,7 @@ setMethod("Resample",signature(object="ParticleMatrix"),
 				ids <- .Call("resample_stratified",logWeights = logW,PACKAGE="SMCS4")
 			}
 		)
-		if(object@p_margin == 2) object@particles <- object@particles[,ids] else object@particles <- object@particles[ids,]
+		if(object@p_margin == 2) object@particles <- object@particles[,ids,drop=FALSE] else object@particles <- object@particles[ids,,drop=FALSE]
 		logWeights(object) <- rep(log(1/N),N)
 		object@unifWeights <- TRUE
 		object
